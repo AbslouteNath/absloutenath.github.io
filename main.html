@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .refresh {
+            font-size: 14px;
+            padding: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stopwatch</h1>
+    <button id="stopwatch-button" onclick="toggleStopwatch()">Start Stopwatch</button>
+    <p id="start-time">Start Time: -</p>
+    <p id="end-time">End Time: -</p>
+    <p id="elapsed-time">Elapsed Time: 0.00 seconds</p>
+    <br>
+    <button class="refresh" onclick="resetStopwatch()">Refresh</button>
+
+    <script>
+        let startTime = null;
+        let endTime = null;
+        let interval = null;
+        let notifyInterval = null;
+
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission !== "granted") {
+                        alert("Notifications are disabled. Enable them in browser settings.");
+                    }
+                });
+            }
+        }
+
+        function sendNotification() {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("Stopwatch Reminder", {
+                    body: "Your stopwatch has been running for 10 minutes!",
+                    icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Stopwatch_icon.png/512px-Stopwatch_icon.png"
+                });
+            }
+        }
+
+        function toggleStopwatch() {
+            const button = document.getElementById("stopwatch-button");
+            const startTimeDisplay = document.getElementById("start-time");
+            const endTimeDisplay = document.getElementById("end-time");
+            const elapsedTimeDisplay = document.getElementById("elapsed-time");
+
+            if (!startTime) {
+                requestNotificationPermission();
+
+                startTime = new Date();
+                startTimeDisplay.textContent = "Start Time: " + startTime.toLocaleTimeString();
+                button.textContent = "Stop Stopwatch";
+
+                interval = setInterval(() => {
+                    const currentTime = new Date();
+                    const elapsedTime = (currentTime - startTime) / 1000;
+                    elapsedTimeDisplay.textContent = "Elapsed Time: " + elapsedTime.toFixed(2) + " seconds";
+                }, 60000); // Updates every 1 minute
+
+                notifyInterval = setInterval(() => {
+                    sendNotification();
+                }, 10000); // Notify every 10 minutes
+            } else {
+                clearInterval(interval);
+                clearInterval(notifyInterval);
+                endTime = new Date();
+                endTimeDisplay.textContent = "End Time: " + endTime.toLocaleTimeString();
+                
+                const elapsedTime = (endTime - startTime) / 1000;
+                elapsedTimeDisplay.textContent = "Elapsed Time: " + elapsedTime.toFixed(2) + " seconds";
+                
+                startTime = null; // Reset stopwatch
+                button.textContent = "Start Stopwatch"; // Reset button text
+            }
+        }
+
+        function resetStopwatch() {
+            clearInterval(interval);
+            clearInterval(notifyInterval);
+            startTime = null;
+            endTime = null;
+
+            document.getElementById("start-time").textContent = "Start Time: -";
+            document.getElementById("end-time").textContent = "End Time: -";
+            document.getElementById("elapsed-time").textContent = "Elapsed Time: 0.00 seconds";
+            document.getElementById("stopwatch-button").textContent = "Start Stopwatch";
+        }
+    </script>
+</body>
+</html>
