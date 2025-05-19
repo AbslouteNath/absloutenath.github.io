@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AA Advert</title>
+    <p>AA Advert</p>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        textarea {
+            width: 300px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <textarea id="textBox" readonly># The Automobile Association
+
+- We read our applications every day, and will message you whether you passed or failed so you don't need to worry! 
+- Our applications process is not too intense as we like to give everyone who has the passion for the job to give it a go. 
+- There's no training programme, just a handbook to get you started with the job as soon as you join us. 
+
+So why wouldn't you apply today?
+
+**Why Choose the AA?**
+- Off-duty crime is allowed,
+- Earn **£585** every **5 minutes**,
+- Opportunity to get the **flatbed qualification**,
+- No activity requirements, **patrol when you choose**!
+- Relaxed atmosphere, friendly employee engagement,
+- Be at the forefront of the latest developments and advances in the automobile repair industry,
+- **Career opportunities** and advancement paths in different divisions.
+
+In Partnership with RCS, FirstGroup, 9Taxi.
+
+💼 Apply today from our server! 
+🔗 Discord: https://discord.gg/QDSqwr2jT5
+
+https://cdn.discordapp.com/attachments/1373300553446199387/1373615923579191348/32583B1C-0203-4343-986F-63579B022C11.png?ex=682b0f04&is=6829bd84&hm=945aea3150ed4e1b2efae991993e7ced0cec745e85f6474c0813a93c3fef2370& 
+https://images-ext-1.discordapp.net/external/5zSbkbvDXfGvR84bgeNHu6N13_8dQrTbVndnOw5KWbY/https/i.imgur.com/LQeN0Di.jpeg?format=webp&width=1860&height=500</textarea>
+    <button onclick="copyText()">Copy to Clipboard</button>
+    <button onclick="location.href='index.html'">Go Back</button>
+
+    <script>
+        function copyText() {
+            let textBox = document.getElementById("textBox");
+            textBox.select();
+            textBox.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textBox.value)
+                .then(() => alert("Text copied to clipboard!"))
+                .catch(err => console.error("Failed to copy text: ", err));
+        }
+    </script>
+
+</body>
+</html>
