@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Shift Timer</h1>
+    <button id="stopwatch-button" onclick="toggleStopwatch()">Start Shift</button>
+    <p id="start-time">Start Time: -</p>
+    <p id="end-time">End Time: -</p>
+    <p id="elapsed-time">Elapsed Time: 00:00:00</p>
+    <br>
+    <button class="refresh" onclick="resetStopwatch()">Refresh</button>
+    <button onclick="location.href='index.html'">Go Back</button>
+
+
+    <script>
+        let startTime = null;
+        let endTime = null;
+        let interval = null;
+        let notifyInterval = null;
+
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission !== "granted") {
+                        alert("Notifications are disabled. Enable them in browser settings for shift notifications.");
+                    }
+                });
+            }
+        }
+
+        function sendNotification() {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("Shift Reminder", {
+                    body: "Your shift has been running for 10 minutes! Are you still on shift?",
+                    icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/The_Automobile_Association_logo.svg/1200px-The_Automobile_Association_logo.svg.png"
+                });
+            }
+        }
+
+        function formatTime(seconds) {
+            let hrs = Math.floor(seconds / 3600);
+            let mins = Math.floor((seconds % 3600) / 60);
+            let secs = Math.floor(seconds % 60);
+            return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+
+        function toggleStopwatch() {
+            const button = document.getElementById("stopwatch-button");
+            const startTimeDisplay = document.getElementById("start-time");
+            const endTimeDisplay = document.getElementById("end-time");
+            const elapsedTimeDisplay = document.getElementById("elapsed-time");
+
+            if (!startTime) {
+                requestNotificationPermission();
+
+                startTime = new Date();
+                startTimeDisplay.textContent = "Start Time: " + startTime.toLocaleTimeString();
+                button.textContent = "Stop Shift";
+
+                interval = setInterval(() => {
+                    const currentTime = new Date();
+                    const elapsedTime = (currentTime - startTime) / 1000;
+                    elapsedTimeDisplay.textContent = "Elapsed Time: " + formatTime(elapsedTime);
+                }, 1000);
+
+                notifyInterval = setInterval(() => {
+                    sendNotification();
+                }, 600000);
+            } else {
+                clearInterval(interval);
+                clearInterval(notifyInterval);
+                endTime = new Date();
+                endTimeDisplay.textContent = "End Time: " + endTime.toLocaleTimeString();
+                
+                const elapsedTime = (endTime - startTime) / 1000;
+                elapsedTimeDisplay.textContent = "Elapsed Time: " + formatTime(elapsedTime);
+                
+                startTime = null;
+                button.textContent = "Start Shift";
+            }
+        }
+
+        function resetStopwatch() {
+            clearInterval(interval);
+            clearInterval(notifyInterval);
+            startTime = null;
+            endTime = null;
+
+            document.getElementById("start-time").textContent = "Start Time: -";
+            document.getElementById("end-time").textContent = "End Time: -";
+            document.getElementById("elapsed-time").textContent = "Elapsed Time: 00:00:00";
+            document.getElementById("stopwatch-button").textContent = "Start Shift";
+        }
+    </script>
+</body>
+</html>
