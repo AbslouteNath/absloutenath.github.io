@@ -78,7 +78,7 @@
                     const currentTime = new Date();
                     const elapsedTime = (currentTime - startTime) / 1000;
                     elapsedTimeDisplay.textContent = "Elapsed Time: " + formatTime(elapsedTime);
-                }, 1000);
+                }, 600000);
 
                 notifyInterval = setInterval(() => {
                     sendNotification();
